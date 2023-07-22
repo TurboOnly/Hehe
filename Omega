@@ -1,0 +1,874 @@
+MDown = false
+Mouse = game.Players.LocalPlayer:GetMouse()
+function ConvertNumbers(X, Y)
+    local TX = Mouse.ViewSizeX*X
+    local TY = Mouse.ViewSizeY*Y
+    return TX, TY
+end
+function MoveableItem(item)
+    item.InputBegan:connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+            MDown = true
+            local CX, CY = ConvertNumbers(item.Position.X.Scale, item.Position.Y.Scale)
+            item.Position = UDim2.new(0, item.Position.X.Offset+CX, 0, item.Position.Y.Offset+CY)
+            local StartX = Mouse.X - item.Position.X.Offset
+            local StartY = Mouse.Y - item.Position.Y.Offset
+            while MDown == true do
+                item.Position = UDim2.new(0, Mouse.X - StartX, 0, Mouse.Y - StartY)
+                wait()
+            end
+        end
+    end)
+    item.InputEnded:connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 then
+            MDown = false
+        end
+    end)
+end
+
+Badges = {1, 2, 3, 4}
+RouletteTable = {"SkinRoulette","UpgradedRoulette","Roulette"}
+
+local ItemTable = {
+    ["Recover"] = { ["Antidote"] = true, ["Awakening"] = true, ["Burn Heal"] = true, ["Full Restore"] = true, ["Hyper Potion"] = true, ["Max Elixir"] = true, ["Paralyze Heal"] = true, ["Revive"] = true, ["Potion"] = true, ["Ice Heal"] = true},
+    ["Pokeball"] = { ["Great Ball"] = true, ["Premier Ball"] = true, ["Ultra Ball"] = true, ["Pokeball"] = true, ["Repeat Ball"] = true, ["Nest Ball"] = true, ["Net Ball"] = true, ["Master Ball"] = true },
+    ["Competitive"] = { ["Calcium"] = true, ["Carbos"] = true, ["HP Up"] = true, ["Iron"] = true, ["Mini Stat Reset"] = true, ["Nature Stone"] = true, ["PokeImprove"] = true, ["Protein"] = true, ["Stat Reset"] = true, ["Zinc"] = true },
+    ["Evolution"] = {["Rare Candy"] = true, ["Common Candy"] = true, ["Dragon Scale"] = true, ["Fire Stone"] = true, ["Friendship Ribbon"] = true, ["Leaf Stone"] = true, ["Link Cable Stone"] = true, ["Metal Coat"] = true, ["Moon Stone"] = true, ["Sinnoh Stone"] = true, ["Thunder Stone"] = true, ["Water Stone"] = true },
+    ["HeldItems"] = { ["Aggronite"] = true, ["Beedrillite"] = true, ["Altarianite"] = true, ["Audinite"] = true, ["Glalitite"] = true, ["Ampharosite"] = true, ["Pinsirite"] = true, ["Slowbronite"] = true, ["Manectite"] = true, ["Venusaurite"] = true, ["Swampertite"] = true, ["Tyranitarite"] = true, ["Salamencite"] = true, ["Sablenite"] = true, ["Heracronite"] = true, ["Lopunnite"] = true, ["Latiosite"] = true, ["Latiasite"] = true, ["Houndoomite"] = true, ["Lucarionite"] = true, ["Metagrossite"] = true, ["Steelixite"] = true, ["Sharpedonite"] = true, ["Sceptilite"] = true, ["Pidgeotite"] = true, ["Gyaradosite"] = true, ["Medichamite"] = true, ["Mawilite"] = true, ["Gengarite"] = true, ["Gardevoirite"] = true, ["Galladite"] = true, ["Charizardite Y"] = true, ["Charizardite X"] = true, ["Cameruptite"] = true, ["Blazikenite"] = true, ["Blastoisinite"] = true, ["Absolite"] = true, ["Alakazamite"] = true, ["Banettite"] = true, ["Aerodactylite"] = true, ["Garchompite"] = true, ["Scizorite"] = true }
+};
+--GetFunctionsRequired and making bypasses--
+Tab = getrenv()._G
+FakeFunctions = {["UpgradedRoulette"] = true, ["BattleInitiate"] = true, ["ForceOak"] = true, ["GetBattleTowerTeam"] = true, ["PCSystem"] = true, ["UltimateRoulette"] = true, ["MoveRelearner"] = true, ["EVChecker"] = true, ["nickname"] = true, ["TrainerCard"] = true, ["PokeBoosters"] = true, ["BattleTowerSelectPoke"] = true, ["ItemBattle"] = true, ["UpdateBag"] = true, ["StatScreen"] = true, ["getBackSprite"] = true, ["Roulette"] = true, ["Shop"] = true, ["CashShop"] = true, ["TMShop"] = true, ["MysteryGift"] = true, ["Redward"] = true, ["TransferSkin"] = true, ["UsernamePartyGet"] = true, ["Trade"] = true, ["BPTMShop"] = true, ["PokemonShop"] = true, ["Nickname"] = true, ["NatureScientist"] = true, ["BPItemShop"] = true, ["PartyBattle"] = true, ["getFrontSprite"] = true, ["Pokedex"] = true, ["PVPParty"] = true, ["PartyOverworld"] = true, ["ShowStats"] = true}
+function GetRealFunction()
+for i, v in pairs(Tab) do
+if typeof(v) == "function" and FakeFunctions[tostring(i)] == nil then
+return v
+end
+end
+end
+SpawnFunction = GetRealFunction()
+if debug.getconstant(SpawnFunction, 3) == "getrenv" then
+    debug.setconstant(SpawnFunction, 3, "This is a really long string which should bypass anything because I said so.")
+end
+Math = require(game.ReplicatedStorage.Functions.Math)
+BadgeFunction = Math.AwardBadge
+FuncAddItem = Math.AddItem
+AddItem = Math.BuyItem
+if debug.getconstant(BadgeFunction, 3) == "getrenv" then
+    debug.setconstant(BadgeFunction, 3, "Again, this is a really long string which should bypass their stupid security they have in place xD")
+end
+if debug.getconstant(FuncAddItem, 3) == "getrenv" then
+    debug.setconstant(FuncAddItem, 3, "Again, this is a really long string which should bypass their stupid security they have in place xD")
+end
+if debug.getconstant(AddItem, 3) == "getrenv" then
+    debug.setconstant(AddItem, 3, "Again, this is a really long string which should bypass their stupid security they have in place xD")
+end
+--End of getting functions--
+--Setup functions--
+Rep = game:GetService("ReplicatedStorage")
+MoveLearn = Rep.REvents.Pokemon.MoveLearn
+function ChangeParent(Object, Par)
+    Rep.REvents.PC.ParentChange:InvokeServer(Object, Par)
+end
+
+
+
+	
+
+
+function GetSlot(Par, Val)
+    local Tab = {}
+    for i = 1, 60 do
+        Tab[i] = true
+    end
+    for i, v in pairs(Par:GetChildren()) do
+        if v:FindFirstChild("PartyPosition") then
+            Tab[v.PartyPosition.Value] = nil
+        end
+    end
+    if Val ~= nil then
+        return Tab
+    end
+    for i = 1, 60 do
+        if Tab[i] == true then
+            return tonumber(i)
+        end
+    end
+    return 0
+end
+local Accepted = 0
+local SpawnPlace = game.Players.LocalPlayer.Backpack
+function SpawnPokemon(Poke, Lvl, Par, S, A)
+    Poke = SpawnFunction(Poke, SpawnPlace, Lvl)
+    if tostring(Par) == "PokemonParty" then
+        if (S == true and Poke:WaitForChild("Shiny").Value ~= true or A == true and not Poke:FindFirstChild("Skin")) then
+            game:GetService("ReplicatedStorage").REvents.PC.Release:FireServer(Poke)
+            return
+        end
+        Rep.REvents.PC.ChangePos:InvokeServer(Poke, #Par:GetChildren()+1)
+        ChangeParent(Poke, Par)
+    end
+
+    if tostring(Par) == "Box 1" then
+        if (S == true and Poke:WaitForChild("Shiny").Value ~= true or A == true and not Poke:FindFirstChild("Skin")) then
+            game:GetService("ReplicatedStorage").REvents.PC.Release:FireServer(Poke)
+            return
+        end
+        Rep.REvents.PC.ChangePos:InvokeServer(Poke, #Par:GetChildren()+1)
+        ChangeParent(Poke, Par)
+    end
+end
+
+
+
+
+function GetPokemon(Poke)
+    local Pokes = Tab.Pokemon
+    if Pokes[Poke] ~= nil then
+        return Poke
+    end
+    for i, v in pairs(Pokes) do
+        if string.sub(string.lower(i), 1, string.len(Poke)) == string.lower(Poke) then
+            return i
+        end
+    end
+end
+function ChangeName(Ob)
+    Poke = game:GetService("Players").LocalPlayer.PokemonParty:FindFirstChildOfClass("Configuration")
+    spawn(function()
+        pcall(function()
+            Move = Poke.Moves:FindFirstChildOfClass("IntValue").Name
+            if Ob.Name ~= Move then
+                MoveLearn:InvokeServer(Poke, Ob, Move)
+            end
+        end)
+    end)
+end
+function MakeItem(Par, Name, Val)
+FuncAddItem(nil, Name, Par, Val)
+end
+function ChangeNumber(Item, Val)
+AddItem(nil, Item, Val)
+end
+--End of setup--
+
+function OpenTabF(Tab)
+    Local.Visible = false
+    Spawner.Visible = false
+    Tab.Visible = true
+    OpenClose()
+end
+
+ScreenGui = Instance.new("ScreenGui", game:GetService("CoreGui"))
+ScreenGui.Name = "PokemonGui"
+ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+if _G.SG ~= nil then
+    _G.SG:remove()
+end
+_G.SG = ScreenGui
+
+Frame = Instance.new("Frame", ScreenGui)
+Frame.Name = "Frame"
+Frame.BackgroundColor3 = Color3.fromRGB(43, 43, 43)
+Frame.BorderSizePixel = 0
+Frame.Position = UDim2.new(0.301, 0, 0.36, 0)
+Frame.Size = UDim2.new(0, 375, 0, 37)
+MoveableItem(Frame)
+
+MainFrame = Instance.new("Frame", Frame)
+MainFrame.Name = "MainFrame"
+MainFrame.BackgroundColor3 = Color3.fromRGB(48, 48, 48)
+MainFrame.BorderSizePixel = 0
+MainFrame.Position = UDim2.new(0, 0, 1, 0)
+MainFrame.Size = UDim2.new(0, 375, 0, 221)
+MainFrame.ClipsDescendants = true
+
+Tabs = Instance.new("ScrollingFrame", MainFrame)
+Tabs.Name = "Tabs"
+Tabs.Active = true
+Tabs.BackgroundColor3 = Color3.fromRGB(54, 54, 54)
+Tabs.BorderSizePixel = 0
+Tabs.Size = UDim2.new(0, 100, 0, 221)
+Tabs.Visible = false
+Tabs.ScrollBarImageColor3 = Color3.fromRGB(0, 0, 0)
+Tabs.ScrollBarThickness = 0
+Tabs.ZIndex = 100
+
+UIListLayout = Instance.new("UIListLayout", Tabs)
+UIListLayout.Name = "UIListLayout"
+UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+UIListLayout.Padding = UDim.new(0, 4)
+
+Frame2 = Instance.new("Frame", Tabs)
+Frame2.Name = "Frame2"
+Frame2.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+Frame2.BackgroundTransparency = 1
+Frame2.Size = UDim2.new(0, 100, 0, 0)
+
+TextButton = Instance.new("TextButton", Tabs)
+TextButton.Name = "TextButton"
+TextButton.BackgroundColor3 = Color3.fromRGB(43, 43, 43)
+TextButton.BorderSizePixel = 0
+TextButton.Size = UDim2.new(0, 100, 0, 33)
+TextButton.Font = Enum.Font.SourceSans
+TextButton.Text = "Local"
+TextButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+TextButton.TextSize = 21
+TextButton.MouseButton1Down:Connect(function()
+    OpenTabF(Local)
+end)
+
+
+
+TextButton3 = Instance.new("TextButton", Tabs)
+TextButton3.Name = "TextButton3"
+TextButton3.BackgroundColor3 = Color3.fromRGB(43, 43, 43)
+TextButton3.BorderSizePixel = 0
+TextButton3.Size = UDim2.new(0, 100, 0, 33)
+TextButton3.Font = Enum.Font.SourceSans
+TextButton3.Text = "Spawner"
+TextButton3.TextColor3 = Color3.fromRGB(255, 255, 255)
+TextButton3.TextSize = 21
+TextButton3.MouseButton1Down:Connect(function()
+    OpenTabF(Spawner)
+end)
+
+Local = Instance.new("Frame", MainFrame)
+Local.Name = "Local"
+Local.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+Local.BackgroundTransparency = 1
+Local.BorderSizePixel = 0
+Local.Size = UDim2.new(0, 375, 0, 221)
+Local.Visible = true
+
+Frame3 = Instance.new("Frame", Local)
+Frame3.Name = "Frame3"
+Frame3.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+Frame3.BackgroundTransparency = 1
+Frame3.Position = UDim2.new(0, 32.5, 0.24, -1)
+Frame3.Size = UDim2.new(0, 335, 0, 168)
+
+Money = Instance.new("TextButton", Frame3)
+Money.Name = "Money"
+Money.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+Money.BorderSizePixel = 0
+Money.Position = UDim2.new(0.222, 0, 0.032, 0)
+Money.Size = UDim2.new(0, 80, 0, 37)
+Money.Font = Enum.Font.SourceSans
+Money.Text = "Set Money"
+Money.TextColor3 = Color3.fromRGB(255, 255, 255)
+Money.TextSize = 21
+Money.MouseButton1Down:Connect(function()
+local TempNumber = tonumber(Num.Text)
+if tonumber(Num.Text) == nil then
+TempNumber = 0
+end
+if Name2.Text ~= "" then
+    for i, v in pairs(game.Players:GetPlayers()) do
+        if string.match(string.lower(tostring(v)), string.lower(Name2.Text)) then
+            MakeItem(v, "Money", TempNumber)
+            ChangeName(v.Money)
+        end
+    end
+else
+MakeItem(game.Players.LocalPlayer, "Money", TempNumber)
+ChangeName(game.Players.LocalPlayer.Money)
+end
+end)
+
+Badge = Instance.new("TextButton", Frame3)
+Badge.Name = "Badge"
+Badge.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+Badge.BorderSizePixel = 0
+Badge.Position = UDim2.new(0.222, 0, 0.452, 0)
+Badge.Size = UDim2.new(0, 80, 0, 37)
+Badge.Font = Enum.Font.SourceSans
+Badge.Text = "Badges"
+Badge.TextColor3 = Color3.fromRGB(255, 255, 255)
+Badge.TextSize = 21
+Badge.MouseButton1Down:Connect(function()
+    if Name2.Text ~= "" then
+        for i, v in pairs(game.Players:GetPlayers()) do
+            if string.match(string.lower(tostring(v)), string.lower(Name2.Text)) and v:FindFirstChild("Badges") then
+                for a = 1, #Badges do
+                    if not v.Badges:FindFirstChild(Badges[a]) then
+                        spawn(function()
+                            MakeItem(v.Badges, Badges[a], 0)
+                        end)
+                    end
+                end
+            end
+        end
+    else
+        for i = 1, #Badges do
+            if not game.Players.LocalPlayer.Badges:FindFirstChild(Badges[i]) then
+                spawn(function()
+                    MakeItem(game.Players.LocalPlayer.Badges, Badges[i], 0)
+                end)
+            end
+        end
+    end
+end)
+
+Items = Instance.new("TextButton", Frame3)
+Items.Name = "Items"
+Items.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+Items.BorderSizePixel = 0
+Items.Position = UDim2.new(0.222, 0, 0.249, 0)
+Items.Size = UDim2.new(0, 80, 0, 37)
+Items.Font = Enum.Font.SourceSans
+Items.Text = "Set Items"
+Items.TextColor3 = Color3.fromRGB(255, 255, 255)
+Items.TextSize = 19
+Items.MouseButton1Down:connect(function()
+    local TempItems = Tab.Items
+    local TItem = Name3.Text
+    local Amount = 0
+    if tonumber(Num.Text) ~= nil then
+        Amount = tonumber(Num.Text)
+    end
+    if not TempItems[TItem] then
+        for i, v in pairs(TempItems) do
+            if string.match(string.lower(i), string.lower(TItem)) then
+                TItem = i
+                break
+            end
+        end
+    end
+    if TempItems[TItem] == nil then
+        return
+    end
+    Plr = game.Players.LocalPlayer
+    if Name2.Text ~= "" then
+        for i, v in pairs(game.Players:GetPlayers()) do
+            if string.match(tostring(v), Name2.Text) then
+                Plr = v
+            end
+        end
+    end
+    local Slot = nil
+    for i, v in pairs(ItemTable) do
+        if v[TItem] ~= nil then
+            Slot = i
+            break
+        end
+    end
+    if Slot ~= nil then
+        if Plr.Bag[Slot]:FindFirstChild(TItem) and Plr == game.Players.LocalPlayer then
+            ChangeNumber(Plr.Bag[Slot][TItem], Amount)
+        else
+            MakeItem(Plr.Bag[Slot], TItem, Amount)
+        end
+    end
+end)
+
+Heal = Instance.new("TextButton", Frame3)
+Heal.Name = "Heal"
+Heal.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+Heal.BorderSizePixel = 0
+Heal.Position = UDim2.new(0.222, 0, 0.249, 0)
+Heal.Size = UDim2.new(0, 80, 0, 37)
+Heal.Font = Enum.Font.SourceSans
+Heal.Text = "Heal - Local"
+Heal.TextColor3 = Color3.fromRGB(255, 255, 255)
+Heal.TextSize = 19
+Heal.MouseButton1Down:connect(function()
+    for i, v in pairs(game.Players.LocalPlayer.PokemonParty:GetChildren()) do
+        v.Status.Value = ""
+        v.CurrentHP.Value = v.Stats.HPStat
+    end
+end)
+
+UIGridLayout = Instance.new("UIGridLayout", Frame3)
+UIGridLayout.Name = "UIGridLayout"
+UIGridLayout.SortOrder = Enum.SortOrder.LayoutOrder
+UIGridLayout.CellSize = UDim2.new(0, 100, 0, 37)
+UIGridLayout.CellPadding = UDim2.new(0, 6, 0, 5)
+
+PDex = Instance.new("TextButton", Frame3)
+PDex.Name = "PDex"
+PDex.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+PDex.BorderSizePixel = 0
+PDex.Position = UDim2.new(0.222, 0, 0.249, 0)
+PDex.Size = UDim2.new(0, 80, 0, 37)
+PDex.Font = Enum.Font.SourceSans
+PDex.Text = "Pokedex"
+PDex.TextColor3 = Color3.fromRGB(255, 255, 255)
+PDex.TextSize = 19
+PDex.MouseButton1Down:connect(function()
+Plr = nil
+if Name2.Text ~= "" then
+    for i, v in pairs(game.Players:GetPlayers()) do
+        if string.match(tostring(v), Name2.Text) then
+            Plr = v
+        end
+    end
+else
+    Plr = game.Players.LocalPlayer
+end
+if Plr ~= nil then
+    PF = Rep.REvents.Pokemon
+    for i, v in pairs(Tab["Pokemon"]) do
+        if not Plr.Pokedex:FindFirstChild(tostring(v.Pokedex)) or Plr.Pokedex[tostring(v.Pokedex)].Caught.Value == false then
+            PF.createPokedex:FireServer(i)
+            spawn(function()
+                repeat
+                    wait()
+                until game.Players.LocalPlayer.Pokedex:FindFirstChild(tostring(v.Pokedex))
+                PF.caughtPokedex:FireServer(i)
+                repeat
+                    wait()
+                until game.Players.LocalPlayer.Pokedex:FindFirstChild(tostring(v.Pokedex)).Caught.Value == true
+                ChangeParent(game.Players.LocalPlayer.Pokedex:FindFirstChild(tostring(v.Pokedex)), Plr.Pokedex)
+            end)
+        end
+    end
+end
+end)
+
+BP = Instance.new("TextButton", Frame3)
+BP.Name = "BP"
+BP.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+BP.BorderSizePixel = 0
+BP.Position = UDim2.new(0.222, 0, 0.249, 0)
+BP.Size = UDim2.new(0, 80, 0, 37)
+BP.Font = Enum.Font.SourceSans
+BP.Text = "BattlePoints"
+BP.TextColor3 = Color3.fromRGB(255, 255, 255)
+BP.TextScaled = 19
+BP.MouseButton1Down:Connect(function()
+local TempNumber = tonumber(Num.Text)
+if tonumber(Num.Text) == nil then
+TempNumber = 0
+end
+if Name2.Text ~= "" then
+for i, v in pairs(game.Players:GetPlayers()) do
+if string.match(tostring(v), Name2.Text) then
+MakeItem(v, "BP", TempNumber)
+ChangeName(v.BP)
+end
+end
+else
+MakeItem(game.Players.LocalPlayer, "BP", TempNumber)
+ChangeName(game.Players.LocalPlayer.BP)
+end
+end)
+
+Num = Instance.new("TextBox", Local)
+Num.Name = "Num"
+Num.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+Num.BorderSizePixel = 0
+Num.Position = UDim2.new(1, -131, 0.032, 0)
+Num.Size = UDim2.new(0, 100, 0, 37)
+Num.Font = Enum.Font.SourceSans
+Num.PlaceholderText = "Number"
+Num.Text = ""
+Num.TextColor3 = Color3.fromRGB(255, 255, 255)
+Num.TextScaled = true
+
+Name2 = Instance.new("TextBox", Local)
+Name2.Name = "Name2"
+Name2.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+Name2.BorderSizePixel = 0
+Name2.Position = UDim2.new(0, 32.5, 0.032, 0)
+Name2.Size = UDim2.new(0, 100, 0, 37)
+Name2.Font = Enum.Font.SourceSans
+Name2.PlaceholderText = "Player Name"
+Name2.Text = ""
+Name2.TextColor3 = Color3.fromRGB(255, 255, 255)
+Name2.TextScaled = true
+
+Name3 = Instance.new("TextBox", Local)
+Name3.Name = "Name3"
+Name3.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+Name3.BorderSizePixel = 0
+Name3.Position = UDim2.new(0, 138.5, 0.032, 0)
+Name3.Size = UDim2.new(0, 100, 0, 37)
+Name3.Font = Enum.Font.SourceSans
+Name3.PlaceholderText = "Item Name"
+Name3.Text = ""
+Name3.TextColor3 = Color3.fromRGB(255, 255, 255)
+Name3.TextScaled = true
+
+
+
+Spawner = Instance.new("Frame", MainFrame)
+Spawner.Name = "Spawner"
+Spawner.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+Spawner.BackgroundTransparency = 1
+Spawner.BorderSizePixel = 0
+Spawner.Size = UDim2.new(0, 375, 0, 221)
+Spawner.Visible = false
+
+Pokemon = Instance.new("TextBox", Spawner)
+Pokemon.Name = "Pokemon2"
+Pokemon.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+Pokemon.BorderSizePixel = 0
+Pokemon.Position = UDim2.new(0.085, 1, 0.032, 0)
+Pokemon.Size = UDim2.new(0, 100, 0, 37)
+Pokemon.Font = Enum.Font.SourceSans
+Pokemon.PlaceholderText = "Pokemon"
+Pokemon.Text = ""
+Pokemon.TextColor3 = Color3.fromRGB(255, 255, 255)
+Pokemon.TextScaled = true
+
+Player = Instance.new("TextBox", Spawner)
+Player.Name = "Player"
+Player.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+Player.BorderSizePixel = 0
+Player.Position = UDim2.new(0.368, 0, 0.032, 0)
+Player.Size = UDim2.new(0, 100, 0, 37)
+Player.Font = Enum.Font.SourceSans
+Player.PlaceholderText = "Player"
+Player.Text = ""
+Player.TextColor3 = Color3.fromRGB(255, 255, 255)
+Player.TextScaled = true
+
+PCBox = Instance.new("TextBox", Spawner)
+PCBox.Name = "PCBox"
+PCBox.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+PCBox.BorderSizePixel = 0
+PCBox.Position = UDim2.new(1, -132, 0.032, 0)
+PCBox.Size = UDim2.new(0, 100, 0, 37)
+PCBox.Font = Enum.Font.SourceSans
+PCBox.PlaceholderText = "PC Box"
+PCBox.Text = ""
+PCBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+PCBox.TextScaled = true
+
+Level = Instance.new("TextBox", Spawner)
+Level.Name = "Level"
+Level.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+Level.BorderSizePixel = 0
+Level.Position = UDim2.new(0.368, 0, 0.226, 0)
+Level.Size = UDim2.new(0, 100, 0, 37)
+Level.Font = Enum.Font.SourceSans
+Level.PlaceholderText = "Level"
+Level.Text = ""
+Level.TextColor3 = Color3.fromRGB(255, 255, 255)
+Level.TextSize = 21
+
+
+SpinName = Instance.new("TextBox", Spawner)
+SpinName.Name = "SpinName"
+SpinName.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+SpinName.BorderSizePixel = 0
+SpinName.Position = UDim2.new(0.648, 0, 0.226, 0)
+SpinName.Size = UDim2.new(0, 100, 0, 37)
+SpinName.Font = Enum.Font.SourceSans
+SpinName.PlaceholderText = "RouletteName"
+SpinName.Text = ""
+SpinName.TextColor3 = Color3.fromRGB(255, 255, 255)
+SpinName.TextSize = 21
+
+
+
+
+local indicount = 0
+Indicator = Instance.new("TextLabel", Spawner)
+Indicator.Name = "Indicator"
+Indicator.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+Indicator.BorderSizePixel = 0
+Indicator.Position = UDim2.new(0.088, 0, 0.226, 0)
+Indicator.Size = UDim2.new(0, 100, 0, 37)
+Indicator.Font = Enum.Font.SourceSans
+Indicator.Text = "Done"
+Indicator.TextColor3 = Color3.fromRGB(255, 255, 255)
+Indicator.TextSize = 21
+
+local ShinyVal = false
+local SkinVal = false
+Frame5 = Instance.new("Frame", Spawner)
+Frame5.Name = "Frame5"
+Frame5.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+Frame5.BackgroundTransparency = 1
+Frame5.Position = UDim2.new(0, 0, 0.226, 42)
+Frame5.Size = UDim2.new(0, 375, 0, 171)
+
+function GetPlayer(P)
+    for i, v in pairs(game.Players:GetPlayers()) do
+        if string.sub(string.lower(tostring(v)), 1, string.len(P)) == string.lower(P) then
+            return v
+        end
+    end
+end
+
+Spawn = Instance.new("TextButton", Frame5)
+Spawn.Name = "Spawn"
+Spawn.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+Spawn.BorderSizePixel = 0
+Spawn.Position = UDim2.new(0.222, 0, 0.032, 0)
+Spawn.Size = UDim2.new(0, 100, 0, 37)
+Spawn.Font = Enum.Font.SourceSans
+Spawn.Text = "Spawn"
+Spawn.TextColor3 = Color3.fromRGB(255, 255, 255)
+Spawn.TextSize = 21
+Spawn.MouseButton1Down:connect(function()
+    local Poke = GetPokemon(Pokemon.Text)
+    local Lvl = tonumber(Level.Text)
+    Accepted = 0
+    if Lvl == nil then
+        Lvl = 5
+    end
+    local P = game.Players.LocalPlayer
+    if Player.Text ~= "" then
+        P = GetPlayer(Player.Text)
+    end
+    local Par = nil
+
+
+local count = 0
+for _,v in pairs(P.PokemonParty:GetChildren()) do
+	count = count + 1
+    if count <= 5 then
+    Par = P.PokemonParty
+    end
+if count >= 6 then
+        Par = P.PC["Box 1"]
+    end
+end
+
+
+    if Poke ~= nil and P ~= nil then
+        SpawnPokemon(Poke, Lvl, Par, ShinyVal, SkinVal)
+    end
+end)
+
+spinning = true
+Spawn2 = Instance.new("TextButton", Frame5)
+Spawn2.Name = "SkinRoulette"
+Spawn2.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+Spawn2.BorderSizePixel = 0
+Spawn2.Position = UDim2.new(0.222, 0, 0.032, 0)
+Spawn2.Size = UDim2.new(0, 100, 0, 37)
+Spawn2.Font = Enum.Font.SourceSans
+Spawn2.Text = "SpinRoulette"
+Spawn2.TextColor3 = Color3.fromRGB(255, 255, 255)
+Spawn2.TextSize = 21
+Spawn2.MouseButton1Down:connect(function()
+if spinning == true then
+
+local RouletteLoc = getrenv()._G[SpinName.Text]
+spinning = false
+if debug.getconstant(RouletteLoc, 3) == "getrenv" then
+    debug.setconstant(RouletteLoc, 3, "TATWAFAWFAWFWFWA DDDAWWDWFA")
+end
+
+
+pcall(function()
+getrenv()._G[SpinName.Text](true)
+
+wait()
+repeat wait() until game.Players.LocalPlayer.PlayerGui.Main[SpinName.Text].Close.Visible == true
+spinning = true
+local Button = game.Players.LocalPlayer.PlayerGui.Main[SpinName.Text].Close
+local events = { "MouseButton1Click", "MouseButton1Down", "Activated" }
+for i, v in next, events do firesignal(Button[v]) end
+end)
+end
+end)
+
+
+
+
+local Spawning = false
+SpawnBox = Instance.new("TextButton", Frame5)
+SpawnBox.Name = "SpawnBox"
+SpawnBox.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+SpawnBox.BorderSizePixel = 0
+SpawnBox.Position = UDim2.new(0.222, 0, 0.249, 0)
+SpawnBox.Size = UDim2.new(0, 100, 0, 37)
+SpawnBox.Font = Enum.Font.SourceSans
+SpawnBox.Text = "SpawnBox"
+SpawnBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+SpawnBox.TextSize = 21
+SpawnBox.MouseButton1Down:connect(function()
+    Spawning = not Spawning
+    SpawnBox.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+    Accepted = 0
+    StartingNumber = #SpawnPlace:GetChildren()
+    local Stuck = false
+    local Poke = GetPokemon(Pokemon.Text)
+    local Lvl = tonumber(Level.Text)
+    if Lvl == nil then
+        Lvl = 5
+    end
+    local P = game.Players.LocalPlayer
+    if Player.Text ~= "" then
+        P = GetPlayer(Player.Text)
+    end
+    local Par = nil
+    if PCBox.Text ~= "" and P.PC["Box "..PCBox.Text] ~= nil then
+        Par = P.PC["Box "..PCBox.Text]
+    end
+    if Spawning == true then
+        SpawnBox.BackgroundColor3 = Color3.fromRGB(35, 110, 35)
+        Accepted = #Par:GetChildren()
+        indispawn = 0
+        while Spawning ==  true do
+            print("Spawning")
+            indispawn = indispawn + 1
+            if indispawn == 1 then
+            Indicator.Text = indicount.." Spawning."
+            end
+            if indispawn == 2 then
+            Indicator.Text = indicount.." Spawning.."
+            end
+            if indispawn == 3 then
+            Indicator.Text = indicount.." Spawning..."
+            end
+            if indispawn == 4 then
+            Indicator.Text = indicount.." Spawning.."
+            indispawn = 0
+            end
+           
+
+
+
+
+            if Accepted >= 60 then
+                Spawning = false
+                SpawnBox.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+                break
+            end
+            for i = 1, 50 do
+                spawn(function()
+                    if SpawnPokemon(Poke, Lvl, Par, ShinyVal, SkinVal) == false then
+                        Spawning = false
+                        SpawnBox.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+                        return
+                    end
+                end)
+            end
+            repeat
+            wait()
+            until #SpawnPlace:GetChildren() >= 50+StartingNumber
+            local Numbers = GetSlot(Par, true)
+            for i, v in pairs(SpawnPlace:GetChildren()) do
+                if v.ClassName == "Configuration" and (ShinyVal == true and v:FindFirstChild("Shiny") and v.Shiny.Value == true or SkinVal == true and v:FindFirstChild("Skin")) or (ShinyVal == false and SkinVal == false) then
+                    local moved = false
+                    for a = 1, 60 do
+                        if Numbers[a] ~= nil then
+                            Numbers[a] = nil
+                            Accepted = Accepted + 1
+                            moved = true
+                            spawn(function()
+                                indicount = indicount + 1
+                                Indicator.Text = "Spawned"                              
+                                Rep.REvents.PC.ChangePos:InvokeServer(v, a)
+                                ChangeParent(v, Par)
+                            end)
+                            break
+                        end
+                    end
+                    if moved == false then
+                        spawn(function()
+                            repeat
+                                game:GetService("ReplicatedStorage").REvents.PC.Release:FireServer(v)
+                                wait()
+                            until v.Parent == nil
+                        end)
+                    end
+                elseif v.ClassName == "Configuration" then
+                    spawn(function()
+                        repeat
+                            game:GetService("ReplicatedStorage").REvents.PC.Release:FireServer(v)
+                            wait()
+                        until v.Parent == nil
+                    end)
+                end
+            end
+            repeat
+            wait()
+            until #SpawnPlace:GetChildren() == StartingNumber
+        end
+
+    end
+        indicount = 0
+        Indicator.Text = "Done"
+end)
+
+
+UIGridLayout3 = Instance.new("UIGridLayout", Frame5)
+UIGridLayout3.Name = "UIGridLayout3"
+UIGridLayout3.HorizontalAlignment = Enum.HorizontalAlignment.Center
+UIGridLayout3.SortOrder = Enum.SortOrder.LayoutOrder
+UIGridLayout3.CellSize = UDim2.new(0, 100, 0, 37)
+
+Toggle2 = Instance.new("TextButton", Frame5)
+Toggle2.Name = "Toggle2"
+Toggle2.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+Toggle2.BorderSizePixel = 0
+Toggle2.Position = UDim2.new(0.222, 0, 0.452, 0)
+Toggle2.Size = UDim2.new(0, 100, 0, 37)
+Toggle2.Font = Enum.Font.SourceSans
+Toggle2.Text = "Skin"
+Toggle2.TextColor3 = Color3.fromRGB(255, 255, 255)
+Toggle2.TextSize = 21
+Toggle2.MouseButton1Down:connect(function()
+
+if SkinVal  == false then
+    Toggle2.BackgroundColor3 = Color3.fromRGB(35, 110,35)
+    SkinVal = true
+else
+        Toggle2.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+    SkinVal = false
+    end
+end)
+
+ClearBox = Instance.new("TextButton", Frame5)
+ClearBox.Name = "ClearBox"
+ClearBox.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+ClearBox.BorderSizePixel = 0
+ClearBox.Position = UDim2.new(0.222, 0, 0.452, 0)
+ClearBox.Size = UDim2.new(0, 100, 0, 37)
+ClearBox.Font = Enum.Font.SourceSans
+ClearBox.Text = "Clear Box - Local"
+ClearBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+ClearBox.TextSize = 16
+ClearBox.MouseButton1Down:connect(function()
+    if PCBox.Text ~= "" and game.Players.LocalPlayer.PC:FindFirstChild("Box "..PCBox.Text) then
+        for i, v in pairs(game.Players.LocalPlayer.PC["Box "..PCBox.Text]:GetChildren()) do
+            spawn(function()
+                game:GetService("ReplicatedStorage").REvents.PC.Release:FireServer(v)
+            end)
+        end
+    end
+end)
+
+
+
+function OpenClose()
+Tabs.Visible = not Tabs.Visible
+OpenTab.Text = "<"
+if Tabs.Visible == false then
+OpenTab.Text = ">"
+end
+end
+
+OpenTab = Instance.new("TextButton", Frame)
+OpenTab.Name = "OpenTab"
+OpenTab.BackgroundColor3 = Color3.fromRGB(43, 43, 43)
+OpenTab.BorderSizePixel = 0
+OpenTab.Size = UDim2.new(0, 49, 0, 37)
+OpenTab.Font = Enum.Font.SourceSans
+OpenTab.Text = ">"
+OpenTab.TextColor3 = Color3.fromRGB(255, 255, 255)
+OpenTab.TextSize = 21
+OpenTab.MouseButton1Down:connect(function()
+OpenClose()
+end)
+
+Close = Instance.new("TextButton", Frame)
+Close.Name = "Close"
+Close.BackgroundColor3 = Color3.fromRGB(43, 43, 43)
+Close.BorderSizePixel = 0
+Close.Position = UDim2.new(0.869, 0, 0, 0)
+Close.Size = UDim2.new(0, 49, 0, 37)
+Close.Font = Enum.Font.SourceSans
+Close.Text = "X"
+Close.TextColor3 = Color3.fromRGB(255, 255, 255)
+Close.TextSize = 21
+Close.MouseButton1Down:connect(function()
+    ScreenGui:remove()
+end)
